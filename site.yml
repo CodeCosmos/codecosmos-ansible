@@ -1,0 +1,37 @@
+---
+- hosts: all
+  user: root
+  sudo: yes
+  vars:
+    public_keys:
+      - public_keys/bob.pub
+  tasks:
+  - name: ensure erlang-solutions source in sources.list.d
+    copy: dest=/etc/apt/sources.list.d/erlang-solutions.list content='deb http://binaries.erlang-solutions.com/debian precise contrib'
+  - name: ensure erlang-solutions key in apt
+    apt_key: id=A14F4FCA url='http://binaries.erlang-solutions.com/debian/erlang_solutions.asc'
+  - name: ensure rackspace cloudmonitoring source in sources.list.d
+    copy: dest=/etc/apt/sources.list.d/rackspace-monitoring-agent.list content='deb http://stable.packages.cloudmonitoring.rackspace.com/ubuntu-12.04-x86_64 cloudmonitoring main'
+  - name: ensure rackspace cloudmonitoring key in apt
+    apt_key: id=D05AB914 url='https://monitoring.api.rackspacecloud.com/pki/agent/linux.asc'
+  - name: update apt cache
+    apt: update_cache=yes cache_valid_time=3600
+  - name: ensure packages are installed
+    apt: pkg={{ item }}
+    with_items: [ 'git', 'esl-erlang', 'rackspace-monitoring-agent',
+                  'nginx', 'libssl-dev',
+                  'libtool', 'automake', 'autoconf', 'autoconf-archive',
+                  'pkg-config', 'build-essential',
+                  'libmozjs185-dev', 'libicu-dev', 'libcurl4-gnutls-dev',
+                  ]
+  - name: create couchdb user
+    user: name=couchdb uid=5001 shell=/bin/bash
+  - name: create codecosmos user
+    user: name=codecosmos uid=5002 shell=/bin/bash
+  - name: ensure SSH management keys present
+    authorized_key: user="{{ item[0] }}" key="{{ lookup('file', item[1]) }}"
+    with_nested:
+      - [ 'root', 'couchdb', 'codecosmos' ]
+      - public_keys
+- include: couchdb.yml
+- include: codecosmos.yml

@@ -1,0 +1,28 @@
+---
+- hosts: all
+  user: codecosmos
+  vars_files:
+    - vars/codecosmos_vars.yml
+  tasks:
+    - name: check out nvm
+      git: repo={{ nvm_repo }}
+           dest={{ nvm_dest }}
+           version={{ nvm_version }}
+           update=no
+    - name: install node
+      script: scripts/install-node.sh
+    - name: check out codecosmos repo
+      git: repo={{ codecosmos_repo }}
+           dest={{ codecosmos_src }}
+           version={{ codecosmos_version }}
+    - name: fetch codecosmos node deps
+      command: bash -c 'source ~/.nvm/nvm.sh; npm install'
+               chdir={{ codecosmos_src }}
+    - name: check out codecosmos-node repo
+      git: repo={{ codecosmos_node_repo }}
+           dest={{ codecosmos_node_src }}
+           version={{ codecosmos_node_version }}
+    - name: fetch codecosmos-node node deps
+      command: bash -c 'source ~/.nvm/nvm.sh; npm install'
+               chdir={{ codecosmos_node_src }}
+      
