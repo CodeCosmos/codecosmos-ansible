@@ -3,6 +3,8 @@
   user: codecosmos
   vars_files:
     - vars/codecosmos_vars.yml
+    - vars/couchdb_vars.yml
+    - secrets/passwords.yml
   tasks:
     - name: check out nvm
       git: repo={{ nvm_repo }}
@@ -16,13 +18,24 @@
            dest={{ codecosmos_src }}
            version={{ codecosmos_version }}
     - name: fetch codecosmos node deps
-      command: bash -c 'source ~/.nvm/nvm.sh; npm install'
+      command: bash -c 'source {{ nvm_sh }}; npm install'
                chdir={{ codecosmos_src }}
     - name: check out codecosmos-node repo
       git: repo={{ codecosmos_node_repo }}
            dest={{ codecosmos_node_src }}
            version={{ codecosmos_node_version }}
     - name: fetch codecosmos-node node deps
-      command: bash -c 'source ~/.nvm/nvm.sh; npm install'
+      command: bash -c 'source {{ nvm_sh }}; npm install'
                chdir={{ codecosmos_node_src }}
-      
+    - name: write out codecosmos-node config
+      template: dest="{{ codecosmos_node_src }}/config.json"
+                src=templates/codecosmos-node/config.json.j2
+- hosts: all
+  user: root
+  vars_files:
+    - vars/codecosmos_vars.yml
+  tasks:
+    - name: write out codecosmos-node supervisord config
+      template: dest=/etc/supervisor/conf.d/codecosmos-node.conf
+                src=templates/codecosmos-node/codecosmos-node.conf.j2
+

@@ -1,0 +1,5 @@
+[program:codecosmos-node]
+command=bash -c 'source {{ nvm_sh }}; ./bin/codecosmos-node config.json'
+user=codecosmos
+environment=HOME='/home/codecosmos',USER='codecosmos'
+directory={{ codecosmos_node_src }}

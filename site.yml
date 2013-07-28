@@ -19,7 +19,7 @@
   - name: ensure packages are installed
     apt: pkg={{ item }}
     with_items: [ 'git', 'esl-erlang', 'rackspace-monitoring-agent',
-                  'nginx', 'libssl-dev',
+                  'nginx', 'libssl-dev', 'supervisor',
                   'libtool', 'automake', 'autoconf', 'autoconf-archive',
                   'pkg-config', 'build-essential',
                   'libmozjs185-dev', 'libicu-dev', 'libcurl4-gnutls-dev',

@@ -8,3 +8,4 @@ codecosmos_node_repo: "git://github.com/CodeCosmos/codecosmos-node.git"
 nvm_version: HEAD
 nvm_repo: "git://github.com/creationix/nvm.git"
 nvm_dest: "/home/codecosmos/.nvm"
+nvm_sh: "{{ nvm_dest }}/nvm.sh"
