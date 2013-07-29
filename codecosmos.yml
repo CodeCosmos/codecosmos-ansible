@@ -2,6 +2,7 @@
 - hosts: all
   user: codecosmos
   vars_files:
+    - vars/common.yml
     - vars/codecosmos_vars.yml
     - vars/couchdb_vars.yml
     - secrets/passwords.yml
@@ -33,9 +34,19 @@
 - hosts: all
   user: root
   vars_files:
+    - vars/common.yml
     - vars/codecosmos_vars.yml
   tasks:
     - name: write out codecosmos-node supervisord config
       template: dest=/etc/supervisor/conf.d/codecosmos-node.conf
                 src=templates/codecosmos-node/codecosmos-node.conf.j2
-
+    - name: write out codecosmos nginx config
+      template: dest=/etc/nginx/sites-available/codecosmos.conf
+                src=templates/etc/nginx/sites-available/codecosmos.conf.j2
+    - name: enable codecosmos nginx config
+      file: src=/etc/nginx/sites-available/codecosmos.conf
+            path=/etc/nginx/sites-enabled/codecosmos.conf
+            state=link
+    - name: disable default nginx config
+      file: path=/etc/nginx/sites-enabled/default
+            state=absent
