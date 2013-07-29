@@ -3,10 +3,15 @@ server {
   #server_name .codecosmos.com;
   root {{ codecosmos_src }}/dist;
   try_files $uri $uri/index.html @couchdb;
+  types {
+    text/cache-manifest appcache;
+    application/font-woff woff;
+  }
   if ($http_x_forwarded_proto != "https") {
     rewrite ^ https://www.codecosmos.com$request_uri? permanent;
   }
   location @couchdb {
     proxy_pass http://127.0.0.1:5984;
+    proxy_buffering off;
   }
 }
