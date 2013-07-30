@@ -2,15 +2,15 @@ server {
   listen {{ internal_ip }}:80;
   #server_name .codecosmos.com;
   root {{ codecosmos_src }}/dist;
-  try_files $uri $uri/index.html @couchdb;
-  types {
-    text/cache-manifest appcache;
-    application/font-woff woff;
-  }
+  include /etc/nginx/sites-available/codecosmos.mime.types;
+  gzip on;
+  gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+
   if ($http_x_forwarded_proto != "https") {
     rewrite ^ https://www.codecosmos.com$request_uri? permanent;
   }
-  location @couchdb {
+  rewrite ^/$ /index.html;
+  location ~ ^/(_users|_status|userdb-[0-9a-f]+)(/.*)?$ {
     proxy_pass http://127.0.0.1:5984;
     proxy_buffering off;
   }

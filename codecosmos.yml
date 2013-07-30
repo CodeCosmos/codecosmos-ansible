@@ -38,15 +38,33 @@
     - vars/codecosmos_vars.yml
   tasks:
     - name: write out codecosmos-node supervisord config
+      notify:
+        - reload supervisord
       template: dest=/etc/supervisor/conf.d/codecosmos-node.conf
                 src=templates/codecosmos-node/codecosmos-node.conf.j2
+    - name: write out codecosmos.mime.types
+      notify:
+        - reload nginx
+      template: dest=/etc/nginx/sites-available/codecosmos.mime.types
+                src=templates/etc/nginx/sites-available/codecosmos.mime.types.j2
     - name: write out codecosmos nginx config
+      notify:
+        - reload nginx
       template: dest=/etc/nginx/sites-available/codecosmos.conf
                 src=templates/etc/nginx/sites-available/codecosmos.conf.j2
     - name: enable codecosmos nginx config
+      notify:
+        - reload nginx
       file: src=/etc/nginx/sites-available/codecosmos.conf
             path=/etc/nginx/sites-enabled/codecosmos.conf
             state=link
     - name: disable default nginx config
+      notify:
+        - reload nginx
       file: path=/etc/nginx/sites-enabled/default
             state=absent
+  handlers:
+    - name: reload supervisord
+      command: supervisorctl reread
+    - name: reload nginx
+      command: service nginx reload
