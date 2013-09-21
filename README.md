@@ -9,3 +9,5 @@ Manual steps:
 driveclient --configure
 rackspace-monitoring-agent --setup
 ```
+
+Go to the backup interface and schedule regular backups for /home/couchdb/opt

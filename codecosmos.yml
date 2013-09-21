@@ -63,6 +63,8 @@
         - reload nginx
       file: path=/etc/nginx/sites-enabled/default
             state=absent
+    - name: nginx service
+      service: name=nginx state=started enabled=yes
   handlers:
     - name: reload supervisord
       command: supervisorctl reread
