@@ -1,0 +1,28 @@
+---
+- hosts: all
+  user: root
+  sudo: yes
+  tasks:
+  - name: ensure erlang-solutions source in sources.list.d
+    copy: dest=/etc/apt/sources.list.d/erlang-solutions.list content='deb http://binaries.erlang-solutions.com/debian precise contrib' mode=0644
+  - name: ensure erlang-solutions key in apt
+    apt_key: id=A14F4FCA url='http://binaries.erlang-solutions.com/debian/erlang_solutions.asc'
+  - name: ensure rackspace cloudmonitoring source in sources.list.d
+    copy: dest=/etc/apt/sources.list.d/rackspace-monitoring-agent.list content='deb http://stable.packages.cloudmonitoring.rackspace.com/ubuntu-12.04-x86_64 cloudmonitoring main' mode=0644
+  - name: ensure rackspace cloudmonitoring key in apt
+    apt_key: id=D05AB914 url='https://monitoring.api.rackspacecloud.com/pki/agent/linux.asc'
+  - name: ensure rackspace driveclient source in sources.list.d
+    copy: dest=/etc/apt/sources.list.d/driveclient.list content='deb [arch=amd64] http://agentrepo.drivesrvr.com/debian/ serveragent main' mode=0644
+  - name: ensure rackspace driveclient key in apt
+    apt_key: id=F6A5034C url='http://agentrepo.drivesrvr.com/debian/agentrepo.key'
+  - name: update apt cache
+    apt: update_cache=yes cache_valid_time=3600
+  - name: ensure packages are installed
+    apt: pkg={{ item }}
+    with_items: [ 'git', 'esl-erlang',
+                  'rackspace-monitoring-agent', 'driveclient',
+                  'nginx', 'libssl-dev', 'supervisor',
+                  'libtool', 'automake', 'autoconf', 'autoconf-archive',
+                  'pkg-config', 'build-essential',
+                  'libmozjs185-dev', 'libicu-dev', 'libcurl4-gnutls-dev',
+                  ]

@@ -1,0 +1,11 @@
+---
+- hosts: all
+  user: root
+  vars_files:
+    - secrets/passwords.yml
+  tasks:
+    - name: bootstrap driveclient
+      command: driveclient --configure --username {{ rackspace_username }} --apikey {{ rackspace_apikey }}
+               creates=/etc/driveclient/bootstrap.json
+    - name: driveclient service
+      service: name=driveclient state=started enabled=yes

@@ -1,0 +1,19 @@
+---
+- hosts: all
+  user: root
+  sudo: yes
+  vars:
+    public_keys:
+      - public_keys/bob.pub
+  tasks:
+  - name: create couchdb user
+    user: name=couchdb uid=5001 shell=/bin/bash
+  - name: create codecosmos user
+    user: name=codecosmos uid=5002 shell=/bin/bash
+  - name: create bob user
+    user: name=bob uid=5003 shell=/bin/bash
+  - name: ensure SSH management keys present
+    authorized_key: user="{{ item[0] }}" key="{{ lookup('file', item[1]) }}"
+    with_nested:
+      - [ 'root', 'couchdb', 'codecosmos', 'bob' ]
+      - public_keys

@@ -1,0 +1,6 @@
+---
+- hosts: all
+  user: root
+  tasks:
+    - name: rackspace-monitoring-agent service
+      service: name=rackspace-monitoring-agent state=started enabled=yes
