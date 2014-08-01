@@ -1,10 +1,18 @@
+Symlink secrets to where you have passwords.yml stored
+
+Create the virtualenv
 ```
-source ~/src/ansible/hacking/env-setup
+make
+```
+
+Run the playbook (from this dir):
+```
+source ./env/bin/activate
 export ANSIBLE_HOSTS=`pwd`/ansible_hosts
 ansible-playbook site.yml
 ```
 
-Manual steps:
+Manual steps (on the server):
 ```
 driveclient --configure
 rackspace-monitoring-agent --setup

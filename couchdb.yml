@@ -8,6 +8,7 @@
       git: repo={{ couchdb_repo }}
            dest={{ couchdb_src }}
            version={{ couchdb_version }}
+           accept_hostkey=yes
            update=no
     - name: bootstrap couchdb
       command: ./bootstrap
@@ -23,6 +24,33 @@
                creates={{ couchdb_dest }}
     - name: configure couchdb
       copy: dest="{{ couchdb_dest }}/{{ couchdb_ini }}" src={{ couchdb_ini }}
+    - name: ensure couchdb plugins dir exists
+      file: path={{ couchdb_dest }}/lib/couchdb/plugins
+            state=directory
+    - name: check out rebar repo
+      git: repo={{ rebar_repo }}
+           dest={{ rebar_src }}
+           version={{ rebar_version }}
+           accept_hostkey=yes
+           update=no
+    - name: make rebar
+      command: ./bootstrap
+               chdir={{ rebar_src }}
+               creates={{ rebar_src }}/rebar
+    - name: check out couchperuser repo
+      git: repo={{ couchperuser_repo }}
+           dest={{ couchperuser_src }}
+           version={{ couchperuser_version }}
+           accept_hostkey=yes
+           update=no
+    - name: make couchperuser
+      command: env PATH={{ couchdb_dest }}/bin:{{ rebar_src }}:$PATH make all
+               chdir={{ couchperuser_src }}
+               creates={{ couchperuser_src }}/ebin/couchperuser.beam
+    - name: install couchperuser symlink
+      file: src={{ couchperuser_src }}
+            path={{ couchdb_dest }}/lib/couchdb/plugins/couchperuser
+            state=link
 - hosts: all
   user: root  
   vars_files:

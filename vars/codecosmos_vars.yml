@@ -2,9 +2,6 @@
 codecosmos_version: HEAD
 codecosmos_src: "/home/codecosmos/src/codecosmos-{{ codecosmos_version }}"
 codecosmos_repo: "git://github.com/CodeCosmos/codecosmos.git"
-codecosmos_node_version: HEAD
-codecosmos_node_src: "/home/codecosmos/src/codecosmos-node-{{ codecosmos_version }}"
-codecosmos_node_repo: "git://github.com/CodeCosmos/codecosmos-node.git"
 nvm_version: HEAD
 nvm_repo: "git://github.com/creationix/nvm.git"
 nvm_dest: "/home/codecosmos/.nvm"

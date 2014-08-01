@@ -1,5 +1,6 @@
 .DS_Store
 /secrets
+/env
 
 # Github .gitignore template for Python
 

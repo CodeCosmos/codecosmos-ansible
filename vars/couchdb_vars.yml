@@ -1,8 +1,15 @@
 ---
-couchdb_version: 9143ce1
+couchdb_version: 1.6.0
 couchdb_src: "/home/couchdb/src/couchdb-{{ couchdb_version }}"
 couchdb_dest: "/home/couchdb/opt/couchdb-{{ couchdb_version }}"
 couchdb_ini: "etc/couchdb/local.d/codecosmos.ini"
 couchdb_repo: "git://github.com/apache/couchdb.git"
 couchdb_host: "127.0.0.1"
 couchdb_port: 5984
+couchperuser_version: 1.0.1
+couchperuser_src: "/home/couchdb/src/couchdb-{{ couchperuser_version }}"
+couchperuser_dst: "{{ couchdb_dest }}/lib/couchdb/plugins/couchperuser"
+couchperuser_repo: "git://github.com/etrepum/couchperuser.git"
+rebar_version: 2.5.1
+rebar_src: "/home/couchdb/src/rebar-{{ rebar_version }}"
+rebar_repo: "git://github.com/rebar/rebar.git"
